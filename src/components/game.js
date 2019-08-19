@@ -18,35 +18,31 @@ export default class Game extends React.Component {
                 return res.json();
             })
             .then(({ results }) => {
-                console.log(results);
-                //Flatten out answers
-                const questions = loadedQuestions.results.map(
-                    (loadedQuestion) => {
-                        const formattedQuestion = {
-                            question: loadedQuestion.question
-                        };
+                //Convert to necessary structure
+                const questions = results.map((loadedQuestion) => {
+                    const formattedQuestion = {
+                        question: loadedQuestion.question
+                    };
 
-                        const answerChoices = [
-                            ...loadedQuestion.incorrect_answers
-                        ];
-                        formattedQuestion.answer =
-                            Math.floor(Math.random() * 3) + 1;
-                        answerChoices.splice(
-                            formattedQuestion.answer - 1,
-                            0,
-                            loadedQuestion.correct_answer
-                        );
+                    const answerChoices = [...loadedQuestion.incorrect_answers];
+                    formattedQuestion.answer =
+                        Math.floor(Math.random() * 3) + 1;
+                    answerChoices.splice(
+                        formattedQuestion.answer - 1,
+                        0,
+                        loadedQuestion.correct_answer
+                    );
 
-                        answerChoices.forEach((choice, index) => {
-                            formattedQuestion['choice' + (index + 1)] = choice;
-                        });
+                    answerChoices.forEach((choice, index) => {
+                        formattedQuestion['choice' + (index + 1)] = choice;
+                    });
 
-                        return formattedQuestion;
-                    }
-                );
+                    return formattedQuestion;
+                });
+
                 this.setState({
                     loading: false,
-                    questions: results,
+                    questions,
                     currentQuestionIndex: 0
                 });
             });
