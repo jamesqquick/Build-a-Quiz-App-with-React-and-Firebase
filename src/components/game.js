@@ -18,7 +18,6 @@ export default class Game extends React.Component {
                 return res.json();
             })
             .then(({ results }) => {
-                //Convert to necessary structure
                 const questions = results.map((loadedQuestion) => {
                     const formattedQuestion = {
                         question: loadedQuestion.question
@@ -71,9 +70,18 @@ export default class Game extends React.Component {
                             </h1>
                         </div>
                     </div>
-                    {currentQuestion && <Question question={currentQuestion} />}
+                    {currentQuestion && (
+                        <Question
+                            question={currentQuestion}
+                            changeQuestion={this.changeQuestion}
+                        />
+                    )}
                 </div>
             </div>
         );
+    }
+
+    changeQuestion() {
+        console.log('LOADING ANOTHER QUESTION');
     }
 }
