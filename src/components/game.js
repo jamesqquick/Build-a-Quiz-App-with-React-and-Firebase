@@ -1,12 +1,15 @@
 import React from 'react';
 import Question from './question';
+import HUD from './hud';
 export default class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             questions: {},
-            currentQuestionIndex: -1,
-            loading: true
+            currentQuestion: null,
+            loading: true,
+            score: 10,
+            questionNumber: 0
         };
     }
 
@@ -18,59 +21,20 @@ export default class Game extends React.Component {
                 return res.json();
             })
             .then(({ results }) => {
-                console.log(results);
-                const questions = results.map((loadedQuestion) => {
-                    const formattedQuestion = {
-                        question: loadedQuestion.question
-                    };
-
-                    const answerChoices = [...loadedQuestion.incorrect_answers];
-                    formattedQuestion.answer =
-                        Math.floor(Math.random() * 3) + 1;
-                    answerChoices.splice(
-                        formattedQuestion.answer - 1,
-                        0,
-                        loadedQuestion.correct_answer
-                    );
-
-                    answerChoices.forEach((choice, index) => {
-                        formattedQuestion['choice' + (index + 1)] = choice;
-                    });
-
-                    return formattedQuestion;
-                });
-
-                this.setState({
-                    loading: false,
-                    questions,
-                    currentQuestionIndex: 0
+                const questions = this.convertQuestionsFromAPI(results);
+                this.setState({ questions }, () => {
+                    this.changeQuestion();
                 });
             });
     }
 
     render() {
-        const { loading, currentQuestionIndex, questions } = this.state;
-        const currentQuestion = questions[currentQuestionIndex];
+        const { loading, currentQuestion, questionNumber, score } = this.state;
         return (
             <div className="container">
                 <div id="loader" className={loading ? '' : 'hidden'} />
                 <div id="game" className={loading ? 'hidden' : ''}>
-                    <div id="hud">
-                        <div id="hud-item">
-                            <p id="progressText" className="hud-prefix">
-                                Question
-                            </p>
-                            <div id="progressBar">
-                                <div id="progressBarFull" />
-                            </div>
-                        </div>
-                        <div id="hud-item">
-                            <p className="hud-prefix">Score</p>
-                            <h1 className="hud-main-text" id="score">
-                                0
-                            </h1>
-                        </div>
-                    </div>
+                    <HUD questionNumber={questionNumber} score={score} />
                     {currentQuestion && (
                         <Question
                             question={currentQuestion}
@@ -82,7 +46,44 @@ export default class Game extends React.Component {
         );
     }
 
-    changeQuestion() {
-        console.log('LOADING ANOTHER QUESTION');
-    }
+    convertQuestionsFromAPI = (rawQuestions) => {
+        return rawQuestions.map((loadedQuestion) => {
+            const formattedQuestion = {
+                question: loadedQuestion.question
+            };
+
+            formattedQuestion.answerChoices = [
+                ...loadedQuestion.incorrect_answers
+            ];
+            formattedQuestion.answer = Math.floor(Math.random() * 4);
+            formattedQuestion.answerChoices.splice(
+                formattedQuestion.answer,
+                0,
+                loadedQuestion.correct_answer
+            );
+            return formattedQuestion;
+        });
+    };
+
+    changeQuestion = (bonus = 0) => {
+        if (this.state.questions.length <= 0) {
+            console.log('GAME OVER');
+        } else {
+            const randomQuestionIndex = Math.floor(
+                Math.random() * this.state.questions.length
+            );
+            const currentQuestion = this.state.questions[randomQuestionIndex];
+            const questions = this.state.questions.filter(
+                (questions, index) => index !== randomQuestionIndex
+            );
+
+            this.setState({
+                loading: false,
+                questions,
+                currentQuestion,
+                questionNumber: this.state.questionNumber + 1,
+                score: this.state.score + bonus
+            });
+        }
+    };
 }

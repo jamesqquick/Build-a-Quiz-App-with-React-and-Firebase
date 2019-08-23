@@ -13,19 +13,20 @@ export default class Question extends React.Component {
         const { question } = this.props;
         return (
             <div>
-                <h2 id="question">{question.question}</h2>
-                {[1, 2, 3, 4].map((num) => (
+                <h2
+                    id="question"
+                    dangerouslySetInnerHTML={{ __html: question.question }}
+                />
+                {question.answerChoices.map((choice, index) => (
                     <div
-                        key={num}
+                        key={index}
                         className={`choice-container ${this.state
-                            .selectedAnswer === num &&
+                            .selectedAnswer === index &&
                             this.state.classToApply}`}
-                        onClick={() => this.checkAnswer(question, num)}
+                        onClick={() => this.checkAnswer(question, index)}
                     >
-                        <p className="choice-prefix">{num}</p>
-                        <p className="choice-text">
-                            {question['choice' + num]}
-                        </p>
+                        <p className="choice-prefix">{index + 1}</p>
+                        <p className="choice-text">{choice}</p>
                     </div>
                 ))}
             </div>
@@ -36,6 +37,7 @@ export default class Question extends React.Component {
         if (!this.state.answering) {
             const classToApply =
                 selectedAnswer === question.answer ? 'correct' : 'incorrect';
+            const bonus = selectedAnswer === question.answer ? 10 : 0;
             this.setState({
                 classToApply,
                 selectedAnswer,
@@ -46,7 +48,7 @@ export default class Question extends React.Component {
                     selectedAnswer: -1,
                     answering: false
                 });
-                this.props.changeQuestion();
+                this.props.changeQuestion(bonus);
             }, 1000);
         }
     }
