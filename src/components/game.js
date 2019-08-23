@@ -1,6 +1,7 @@
 import React from 'react';
 import Question from './question';
 import HUD from './hud';
+import SaveHighScoreForm from './saveScoreForm';
 export default class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -42,6 +43,7 @@ export default class Game extends React.Component {
                         />
                     )}
                 </div>
+                <SaveHighScoreForm score={10} />
             </div>
         );
     }

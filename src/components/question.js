@@ -26,7 +26,10 @@ export default class Question extends React.Component {
                         onClick={() => this.checkAnswer(question, index)}
                     >
                         <p className="choice-prefix">{index + 1}</p>
-                        <p className="choice-text">{choice}</p>
+                        <p
+                            className="choice-text"
+                            dangerouslySetInnerHTML={{ __html: choice }}
+                        ></p>
                     </div>
                 ))}
             </div>
