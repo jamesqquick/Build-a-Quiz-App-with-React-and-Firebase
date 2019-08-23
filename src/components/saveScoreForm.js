@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-export default function saveScoreForm() {
+import { withFirebase } from './Firebase';
+function saveScoreForm() {
+    //        this.props.firebase.scores().push(5);
     return (
         <div className="container">
             <div id="end" className="flex-center flex-column">
@@ -32,3 +34,5 @@ export default function saveScoreForm() {
         </div>
     );
 }
+
+export default withFirebase(saveScoreForm);

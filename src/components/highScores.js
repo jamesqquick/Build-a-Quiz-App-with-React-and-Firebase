@@ -1,11 +1,20 @@
 import React from 'react';
+import { withFirebase } from './Firebase';
 
-export default class HighScores extends React.Component {
+class HighScores extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: true
+            loading: true,
+            scores: []
         };
+    }
+
+    componentDidMount() {
+        //register for the scores from firebase
+        this.props.firebase.scores().on('value', (snapshot) => {
+            console.log(snapshot.val());
+        });
     }
 
     render() {
@@ -18,3 +27,5 @@ export default class HighScores extends React.Component {
         );
     }
 }
+
+export default withFirebase(HighScores);
