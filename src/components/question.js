@@ -1,5 +1,4 @@
 import React from 'react';
-import { Z_ASCII } from 'zlib';
 
 export default class Question extends React.Component {
     constructor(props) {

@@ -18,6 +18,7 @@ export default class Game extends React.Component {
                 return res.json();
             })
             .then(({ results }) => {
+                console.log(results);
                 const questions = results.map((loadedQuestion) => {
                     const formattedQuestion = {
                         question: loadedQuestion.question
