@@ -43,8 +43,14 @@ class saveScoreForm extends React.Component {
     }
 
     saveHighScore = (e) => {
-        console.log('SavinG', this.props.score);
         e.preventDefault();
+        const record = {
+            name: this.state.username,
+            score: this.props.score
+        };
+        this.props.firebase.scores().push(record, () => {
+            console.log('SAVED');
+        });
     };
 
     onInputChange = (e) => {
