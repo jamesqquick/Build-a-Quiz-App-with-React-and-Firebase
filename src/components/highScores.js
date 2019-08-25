@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { withFirebase } from './Firebase';
 
-class HighScores extends React.Component {
+class HighScores extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -14,7 +14,7 @@ class HighScores extends React.Component {
         this.props.firebase.scores().on('value', (snapshot) => {
             const data = snapshot.val();
             const sortedScores = this.formatScoreData(data);
-            this.setState({ scores: sortedScores });
+            this.setState({ scores: sortedScores, loading: false });
         });
     }
 
@@ -23,17 +23,21 @@ class HighScores extends React.Component {
     }
 
     render() {
-        const { scores } = this.state;
+        const { scores, loading } = this.state;
         return (
             <div className="container">
-                <div id="highScoresList">
-                    <h1>HIGH SCORES</h1>
-                    {scores.map((score) => (
-                        <li key={score.key} className="high-score">
-                            {score.name} - {score.score}
-                        </li>
-                    ))}
-                </div>
+                <h1>HIGH SCORES</h1>
+                {!!loading ? (
+                    <p>Loading...</p>
+                ) : (
+                    <div id="highScoresList">
+                        {scores.map((score) => (
+                            <li key={score.key} className="high-score">
+                                {score.name} - {score.score}
+                            </li>
+                        ))}
+                    </div>
+                )}
             </div>
         );
     }

@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Question from './question';
 import HUD from './hud';
 import SaveHighScoreForm from './saveScoreForm';
-export default class Game extends React.Component {
+export default class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -24,9 +24,7 @@ export default class Game extends React.Component {
         fetch(
             `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=${type}`
         )
-            .then((res) => {
-                return res.json();
-            })
+            .then((res) => res.json())
             .then(({ results }) => {
                 const questions = this.convertQuestionsFromAPI(results);
                 this.setState({ questions }, () => {
@@ -45,9 +43,9 @@ export default class Game extends React.Component {
         } = this.state;
         return (
             <div className="container">
-                <div id="loader" className={loading ? '' : 'hidden'} />
-                {!done && (
-                    <div id="game" className={loading ? 'hidden' : ''}>
+                {loading && <div id="loader" />}
+                {!done && !loading && (
+                    <div id="game">
                         <HUD questionNumber={questionNumber} score={score} />
                         {currentQuestion && (
                             <Question
