@@ -15,22 +15,24 @@ export default class Game extends Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const amount = 10;
         const category = 9;
         const difficulty = 'easy';
         const type = 'multiple';
 
-        fetch(
-            `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=${type}`
-        )
-            .then((res) => res.json())
-            .then(({ results }) => {
-                const questions = this.convertQuestionsFromAPI(results);
-                this.setState({ questions }, () => {
-                    this.changeQuestion();
-                });
+        try {
+            const res = await fetch(
+                `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=${type}`
+            );
+            const { results } = await res.json();
+            const questions = this.convertQuestionsFromAPI(results);
+            this.setState({ questions }, () => {
+                this.changeQuestion();
             });
+        } catch (ex) {
+            console.error(ex);
+        }
     }
 
     render() {
