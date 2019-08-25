@@ -17,7 +17,7 @@ export default class Game extends React.Component {
 
     componentDidMount() {
         fetch(
-            'https://opentdb.com/api.php?amount=3&category=9&difficulty=easy&type=multiple'
+            'https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple'
         )
             .then((res) => {
                 return res.json();
