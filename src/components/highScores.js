@@ -11,18 +11,15 @@ class HighScores extends React.Component {
     }
 
     componentDidMount() {
-        const unsubscribe = this.props.firebase
-            .scores()
-            .on('value', (snapshot) => {
-                const data = snapshot.val();
-                const sortedScores = this.formatScoreData(data);
-                this.setState({ scores: sortedScores });
-            });
-        this.setState({ unsubscribe });
+        this.props.firebase.scores().on('value', (snapshot) => {
+            const data = snapshot.val();
+            const sortedScores = this.formatScoreData(data);
+            this.setState({ scores: sortedScores });
+        });
     }
 
     componentWillUnmount() {
-        this.state.unsubscribe();
+        this.props.firebase.scores().off();
     }
 
     render() {
