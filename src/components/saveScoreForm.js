@@ -11,33 +11,28 @@ class saveScoreForm extends React.Component {
     render() {
         return (
             <div className="container">
-                <div id="end" className="flex-center flex-column">
-                    <h1 id="finalScore">{this.props.score}</h1>
-                    <form onSubmit={(e) => this.saveHighScore(e)}>
-                        <input
-                            type="text"
-                            name="username"
-                            id="username"
-                            placeholder="username"
-                            value={this.state.username}
-                            onChange={this.onInputChange}
-                        />
-                        <button
-                            type="submit"
-                            className="btn"
-                            id="saveScoreBtn"
-                            disabled={!this.state.username}
-                        >
-                            Save
-                        </button>
-                    </form>
-                    <Link to="/game" className="btn">
-                        Play Again
-                    </Link>
-                    <Link to="/" className="btn">
-                        Go Home
-                    </Link>
-                </div>
+                <h1 id="finalScore">{this.props.score}</h1>
+                <form onSubmit={(e) => this.saveHighScore(e)}>
+                    <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        placeholder="username"
+                        value={this.state.username}
+                        onChange={this.onInputChange}
+                    />
+                    <button
+                        type="submit"
+                        className="btn"
+                        id="saveScoreBtn"
+                        disabled={!this.state.username}
+                    >
+                        Save
+                    </button>
+                </form>
+                <Link to="/" className="btn">
+                    Go Home
+                </Link>
             </div>
         );
     }
@@ -49,7 +44,7 @@ class saveScoreForm extends React.Component {
             score: this.props.score
         };
         this.props.firebase.scores().push(record, () => {
-            console.log('SAVED');
+            this.props.scoreSaved();
         });
     };
 

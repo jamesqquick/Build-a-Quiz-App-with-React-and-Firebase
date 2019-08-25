@@ -1,5 +1,4 @@
 :root {
-    background-color: #ecf5ff;
     font-size: 62.5%;
 }
 
@@ -9,6 +8,10 @@
     margin: 0;
     padding: 0;
     color: #333;
+}
+
+body {
+    background-color: #ecf5ff;
 }
 
 h1,
@@ -24,20 +27,10 @@ h1 {
     margin-bottom: 5rem;
 }
 
-h1 > span {
-    font-size: 2.4rem;
-    font-weight: 500;
-}
-
 h2 {
     font-size: 4.2rem;
     margin-bottom: 4rem;
     font-weight: 700;
-}
-
-h3 {
-    font-size: 2.8rem;
-    font-weight: 500;
 }
 
 /* UTILITIES */
@@ -57,24 +50,6 @@ h3 {
 
 .container > * {
     width: 100%;
-}
-
-.flex-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.flex-center {
-    justify-content: center;
-    align-items: center;
-}
-
-.justify-center {
-    justify-content: center;
-}
-
-.text-center {
-    text-align: center;
 }
 
 .hidden {
@@ -127,6 +102,8 @@ input {
 input::placeholder {
     color: #aaa;
 }
+
+/* GAME/QUESTION */
 
 .choice-container {
     display: flex;
@@ -222,8 +199,4 @@ input::placeholder {
 .high-score {
     font-size: 2.8rem;
     margin-bottom: 0.5rem;
-}
-
-.high-score:hover {
-    transform: scale(1.025);
 }

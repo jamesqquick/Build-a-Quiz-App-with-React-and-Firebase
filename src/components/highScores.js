@@ -11,29 +11,25 @@ class HighScores extends React.Component {
     }
 
     componentDidMount() {
-        //register for the scores from firebase
-        //        this.props.firebase.scores().push(5);
-        //        this.props.firebase.scores().push(5);
-        this.props.firebase.scores().push({ score: 5, name: 'James' });
+        const unsubscribe = this.props.firebase
+            .scores()
+            .on('value', (snapshot) => {
+                const data = snapshot.val();
+                const sortedScores = this.formatScoreData(data);
+                this.setState({ scores: sortedScores });
+            });
+        this.setState({ unsubscribe });
+    }
 
-        this.props.firebase.scores().on('value', (snapshot) => {
-            const data = snapshot.val();
-            const scores = [];
-            for (let key in data) {
-                const val = data[key];
-                val['key'] = key;
-                scores.push(val);
-            }
-            console.log(scores);
-            this.setState({ scores });
-        });
+    componentWillUnmount() {
+        this.state.unsubscribe();
     }
 
     render() {
         const { scores } = this.state;
         return (
             <div className="container">
-                <div id="highScoresList" className="flex-center flex-column">
+                <div id="highScoresList">
                     <h1>HIGH SCORES</h1>
                     {scores.map((score) => (
                         <li key={score.key} className="high-score">
@@ -44,6 +40,19 @@ class HighScores extends React.Component {
             </div>
         );
     }
+
+    formatScoreData = (firebaseScores) => {
+        const scores = [];
+        for (let key in firebaseScores) {
+            const val = firebaseScores[key];
+            val['key'] = key;
+            scores.push(val);
+        }
+        const sortedScores = scores
+            .sort((score1, score2) => score2.score - score1.score)
+            .slice(0, 10);
+        return sortedScores;
+    };
 }
 
 export default withFirebase(HighScores);

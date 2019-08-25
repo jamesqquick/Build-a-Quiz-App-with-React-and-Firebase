@@ -52,10 +52,20 @@ export default class Game extends React.Component {
                         )}
                     </div>
                 )}
-                {done && <SaveHighScoreForm score={score} />}
+                {done && (
+                    <SaveHighScoreForm
+                        score={score}
+                        history={this.props.history}
+                        scoreSaved={this.scoreSaved}
+                    />
+                )}
             </div>
         );
     }
+
+    scoreSaved = () => {
+        this.props.history.push('/');
+    };
 
     convertQuestionsFromAPI = (rawQuestions) => {
         return rawQuestions.map((loadedQuestion) => {
@@ -83,7 +93,6 @@ export default class Game extends React.Component {
             },
             () => {
                 if (this.state.questions.length <= 0) {
-                    console.log('GAME OVER');
                     this.setState({
                         done: true
                     });
