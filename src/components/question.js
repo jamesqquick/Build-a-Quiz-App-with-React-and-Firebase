@@ -1,58 +1,47 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-export default class Question extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            classToApply: '',
-            selectedAnswer: -1,
-            answering: false
-        };
-    }
-    render() {
-        const { question } = this.props;
-        return (
-            <div>
-                <h2
-                    id="question"
-                    dangerouslySetInnerHTML={{ __html: question.question }}
-                />
-                {question.answerChoices.map((choice, index) => (
-                    <div
-                        key={index}
-                        className={`choice-container ${this.state
-                            .selectedAnswer === index &&
-                            this.state.classToApply}`}
-                        onClick={() => this.checkAnswer(question, index)}
-                    >
-                        <p className="choice-prefix">{index + 1}</p>
-                        <p
-                            className="choice-text"
-                            dangerouslySetInnerHTML={{ __html: choice }}
-                        ></p>
-                    </div>
-                ))}
-            </div>
-        );
-    }
+export default function Question({ question, changeQuestion }) {
+    const [classToApply, setClassToApply] = useState('');
+    const [selectedAnswer, setSelectedAnswer] = useState(-1);
+    const [answering, setAnswering] = useState(false);
 
-    checkAnswer(question, selectedAnswer) {
-        if (!this.state.answering) {
-            const classToApply =
-                selectedAnswer === question.answer ? 'correct' : 'incorrect';
-            const bonus = selectedAnswer === question.answer ? 10 : 0;
-            this.setState({
-                classToApply,
-                selectedAnswer,
-                answering: true
-            });
-            setTimeout(() => {
-                this.setState({
-                    selectedAnswer: -1,
-                    answering: false
-                });
-                this.props.changeQuestion(bonus);
-            }, 1000);
-        }
-    }
+    const checkAnswer = (question, selectedAnswer) => {
+        if (answering) return;
+
+        const classToApply =
+            selectedAnswer === question.answer ? 'correct' : 'incorrect';
+        const bonus = selectedAnswer === question.answer ? 10 : 0;
+        setClassToApply(classToApply);
+        setSelectedAnswer(selectedAnswer);
+        setAnswering(true);
+
+        setTimeout(() => {
+            setSelectedAnswer(-1);
+            setAnswering(false);
+            changeQuestion(bonus);
+        }, 1000);
+    };
+
+    return (
+        <div>
+            <h2
+                id="question"
+                dangerouslySetInnerHTML={{ __html: question.question }}
+            />
+            {question.answerChoices.map((choice, index) => (
+                <div
+                    key={index}
+                    className={`choice-container ${selectedAnswer === index &&
+                        classToApply}`}
+                    onClick={() => checkAnswer(question, index)}
+                >
+                    <p className="choice-prefix">{index + 1}</p>
+                    <p
+                        className="choice-text"
+                        dangerouslySetInnerHTML={{ __html: choice }}
+                    ></p>
+                </div>
+            ))}
+        </div>
+    );
 }
