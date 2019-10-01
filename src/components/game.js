@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Question from './question';
 import HUD from './hud';
 import SaveHighScoreForm from './saveScoreForm';
+import { loadQuestions } from '../helpers/QuestionsHelper';
 export default class Game extends Component {
     constructor(props) {
         super(props);
@@ -16,23 +17,10 @@ export default class Game extends Component {
     }
 
     async componentDidMount() {
-        const amount = 10;
-        const category = 9;
-        const difficulty = 'easy';
-        const type = 'multiple';
-
-        try {
-            const res = await fetch(
-                `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=${type}`
-            );
-            const { results } = await res.json();
-            const questions = this.convertQuestionsFromAPI(results);
-            this.setState({ questions }, () => {
-                this.changeQuestion();
-            });
-        } catch (ex) {
-            console.error(ex);
-        }
+        const questions = await loadQuestions();
+        this.setState({ questions }, () => {
+            this.changeQuestion();
+        });
     }
 
     render() {
@@ -70,25 +58,6 @@ export default class Game extends Component {
 
     scoreSaved = () => {
         this.props.history.push('/');
-    };
-
-    convertQuestionsFromAPI = (rawQuestions) => {
-        return rawQuestions.map((loadedQuestion) => {
-            const formattedQuestion = {
-                question: loadedQuestion.question
-            };
-
-            formattedQuestion.answerChoices = [
-                ...loadedQuestion.incorrect_answers
-            ];
-            formattedQuestion.answer = Math.floor(Math.random() * 4);
-            formattedQuestion.answerChoices.splice(
-                formattedQuestion.answer,
-                0,
-                loadedQuestion.correct_answer
-            );
-            return formattedQuestion;
-        });
     };
 
     changeQuestion = (bonus = 0) => {
