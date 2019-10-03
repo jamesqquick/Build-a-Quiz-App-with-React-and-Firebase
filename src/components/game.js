@@ -5,7 +5,7 @@ import HUD from './hud';
 import SaveHighScoreForm from './saveScoreForm';
 import { loadQuestions } from '../helpers/QuestionsHelper';
 
-export default Game = () => {
+export default function Game(){
     const [questions, setQuestions] = useState({});
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -41,12 +41,12 @@ export default Game = () => {
             )}
         </div>
     );    
-
-    scoreSaved = () => {
+}
+    const scoreSaved = () => {
         this.props.history.push('/');
     };
 
-    changeQuestion = (bonus = 0) => {
+    const changeQuestion = (bonus = 0) => {
             setScore(score + bonus),
             () => {
                 if (questions <= 0) {
@@ -67,4 +67,4 @@ export default Game = () => {
             }
         
     };
-}
+
