@@ -5,7 +5,7 @@ import HUD from './hud';
 import SaveHighScoreForm from './saveScoreForm';
 import { loadQuestions } from '../helpers/QuestionsHelper';
 
-const Game = (props) => {
+export default Game = () => {
     const [questions, setQuestions] = useState({});
     const [currentQuestion, setCurrentQuestion] = useState(null);
     const [loading, setLoading] = useState(true);
