@@ -1,94 +1,70 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect  } from 'react';
+
 import Question from './question';
 import HUD from './hud';
 import SaveHighScoreForm from './saveScoreForm';
 import { loadQuestions } from '../helpers/QuestionsHelper';
-export default class Game extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            questions: {},
-            currentQuestion: null,
-            loading: true,
-            score: 0,
-            questionNumber: 0,
-            done: false
-        };
-    }
 
-    async componentDidMount() {
+export default function Game(){
+    const [questions, setQuestions] = useState({});
+    const [currentQuestion, setCurrentQuestion] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [score, setScore] = useState(0);
+    const [questionNumber, setQuestionNumber] = useState(0);
+    const [done, setDone] = useState(false);
+
+    useEffect(async () =>{
         const questions = await loadQuestions();
-        this.setState({ questions }, () => {
-            this.changeQuestion();
-        });
-    }
+        setQuestions(this.changeQuestion());
+    });
 
-    render() {
-        const {
-            loading,
-            currentQuestion,
-            questionNumber,
-            score,
-            done
-        } = this.state;
-        return (
-            <div className="container">
-                {loading && <div id="loader" />}
-                {!done && !loading && (
-                    <div id="game">
-                        <HUD questionNumber={questionNumber} score={score} />
-                        {currentQuestion && (
-                            <Question
-                                question={currentQuestion}
-                                changeQuestion={this.changeQuestion}
-                            />
-                        )}
-                    </div>
-                )}
-                {done && (
-                    <SaveHighScoreForm
-                        score={score}
-                        history={this.props.history}
-                        scoreSaved={this.scoreSaved}
-                    />
-                )}
-            </div>
-        );
-    }
-
-    scoreSaved = () => {
+    return (
+        <div className="container">
+            {loading && <div id="loader" />}
+            {!done && !loading && (
+                <div id="game">
+                    <HUD questionNumber={questionNumber} score={score} />
+                    {currentQuestion && (
+                        <Question
+                            question={currentQuestion}
+                            changeQuestion={this.changeQuestion}
+                        />
+                    )}
+                </div>
+            )}
+            {done && (
+                <SaveHighScoreForm
+                    score={score}
+                    history={this.props.history}
+                    scoreSaved={this.scoreSaved}
+                />
+            )}
+        </div>
+    );    
+}
+    const scoreSaved = () => {
         this.props.history.push('/');
     };
 
-    changeQuestion = (bonus = 0) => {
-        this.setState(
-            {
-                score: this.state.score + bonus
-            },
+    const changeQuestion = (bonus = 0) => {
+            setScore(score + bonus),
             () => {
-                if (this.state.questions.length <= 0) {
-                    this.setState({
-                        done: true
-                    });
+                if (questions <= 0) {
+                    setDone(true);
                 } else {
                     const randomQuestionIndex = Math.floor(
-                        Math.random() * this.state.questions.length
+                        Math.random() * questions.length
                     );
-                    const currentQuestion = this.state.questions[
+                    const currentQuestion = questions[
                         randomQuestionIndex
                     ];
-                    const questions = this.state.questions.filter(
+                    const questions = questions.filter(
                         (questions, index) => index !== randomQuestionIndex
                     );
-
-                    this.setState({
-                        loading: false,
-                        questions,
-                        currentQuestion,
-                        questionNumber: this.state.questionNumber + 1
-                    });
+                    setLoading(false);
+                    setQuestionNumber(questionNumber + 1);
                 }
             }
-        );
+        
     };
-}
+
