@@ -30,7 +30,7 @@ export default function Game({ history }) {
             return setDone(true);
         }
         const randomQuestionIndex = Math.floor(
-            Math.random() * this.state.questions.length
+            Math.random() * questions.length
         );
         const currentQuestion = questions[randomQuestionIndex];
         const nextQuestions = questions.slice();
@@ -62,7 +62,7 @@ export default function Game({ history }) {
                     {currentQuestion && (
                         <Question
                             question={currentQuestion}
-                            changeQuestion={this.changeQuestion}
+                            changeQuestion={changeQuestion}
                         />
                     )}
                 </div>
@@ -70,8 +70,8 @@ export default function Game({ history }) {
             {done && (
                 <SaveHighScoreForm
                     score={score}
-                    history={this.props.history}
-                    scoreSaved={this.scoreSaved}
+                    history={history}
+                    scoreSaved={scoreSaved}
                 />
             )}
         </div>
