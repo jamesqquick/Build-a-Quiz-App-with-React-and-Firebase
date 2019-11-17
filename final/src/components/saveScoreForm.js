@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { withFirebase } from './Firebase';
+import { useFirebase } from './Firebase/context';
 
-function SaveScoreForm({ score, scoreSaved, firebase }) {
+function SaveScoreForm({ score, scoreSaved }) {
     const [username, setUsername] = useState('');
+    const firebase = useFirebase();
 
     const saveHighScore = (e) => {
         e.preventDefault();
@@ -49,4 +50,4 @@ function SaveScoreForm({ score, scoreSaved, firebase }) {
     );
 }
 
-export default withFirebase(SaveScoreForm);
+export default SaveScoreForm;
