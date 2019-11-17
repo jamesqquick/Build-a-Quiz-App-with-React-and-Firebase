@@ -18,7 +18,7 @@ export default function Question({ question, changeQuestion }) {
         setTimeout(() => {
             setSelectedAnswer(-1);
             setAnswering(false);
-            changeQuestion();
+            changeQuestion(bonus);
         }, 1000);
     };
 
