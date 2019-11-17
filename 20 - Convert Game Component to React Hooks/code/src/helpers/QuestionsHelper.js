@@ -1,5 +1,5 @@
 export const loadQuestions = async (
-    amount = 10,
+    amount = 3,
     category = 9,
     difficulty = 'easy',
     type = 'multiple'

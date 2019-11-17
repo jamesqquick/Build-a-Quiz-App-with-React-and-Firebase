@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { withFirebase } from './Firebase';
+import { useFirebase } from './Firebase/context';
 
 const HighScores = (props) => {
     const [loading, setLoading] = useState(true);
     const [scores, setScores] = useState([]);
+    const firebase = useFirebase();
 
     useEffect(() => {
         props.firebase.scores().once('value', (snapshot) => {
@@ -45,4 +46,4 @@ const formatScoreData = (firebaseScores) => {
     return sortedScores;
 };
 
-export default withFirebase(HighScores);
+export default HighScores;
