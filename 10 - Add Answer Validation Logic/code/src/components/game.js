@@ -50,7 +50,10 @@ export default class Game extends React.Component {
                 {!this.state.loading && (
                     <div id="game">
                         {this.state.currentQuestion && (
-                            <Question question={this.state.currentQuestion} />
+                            <Question
+                                question={this.state.currentQuestion}
+                                changeQuestion={this.changeQuestion}
+                            />
                         )}
                     </div>
                 )}
