@@ -31,7 +31,7 @@ For this application, our different pages (home, game, and high scores) are goin
 -   wrap our application content with BrowserRouter
 -   demo navigation
 
-## Update Game Component With Static Data
+## Create Question Component With Static Data
 
 We will create the Question component which will be used to display quiz questions. We will create dummy question data to display. In the next video, we will load questions from the Open Trivia DB API.
 
