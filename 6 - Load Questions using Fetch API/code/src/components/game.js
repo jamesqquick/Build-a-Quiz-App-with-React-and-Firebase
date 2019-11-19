@@ -1,7 +1,7 @@
-import React from 'react';
-import Question from './question';
+import React, { Component } from 'react';
+import Question from './Question';
 
-export default class Game extends React.Component {
+export default class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -9,46 +9,42 @@ export default class Game extends React.Component {
             currentQuestion: null
         };
     }
-
     async componentDidMount() {
+        const url = `https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple`;
+
         try {
-            const res = await fetch(
-                `https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple`
-            );
+            const res = await fetch(url);
             const { results } = await res.json();
+
             const questions = results.map((loadedQuestion) => {
                 const formattedQuestion = {
-                    question: loadedQuestion.question
+                    question: loadedQuestion.question,
+                    answerChoices: [...loadedQuestion.incorrect_answers]
                 };
 
-                formattedQuestion.answerChoices = [
-                    ...loadedQuestion.incorrect_answers
-                ];
                 formattedQuestion.answer = Math.floor(Math.random() * 4);
+
                 formattedQuestion.answerChoices.splice(
                     formattedQuestion.answer,
                     0,
                     loadedQuestion.correct_answer
                 );
+
                 return formattedQuestion;
             });
-            console.log(questions);
             this.setState({ questions, currentQuestion: questions[0] });
-        } catch (ex) {
-            console.error(ex);
-            return null;
+        } catch (err) {
+            console.error(err);
         }
     }
 
-    render = () => {
+    render() {
         return (
-            <div className="container">
-                <div id="game">
-                    {this.state.currentQuestion && (
-                        <Question question={this.state.currentQuestion} />
-                    )}
-                </div>
-            </div>
+            <>
+                {this.state.currentQuestion && (
+                    <Question question={this.state.currentQuestion} />
+                )}
+            </>
         );
-    };
+    }
 }

@@ -5,7 +5,7 @@ export default function Question({ question }) {
         <div>
             <h2>{question.question}</h2>
             {question.answerChoices.map((choice, index) => (
-                <div className="choice-container">
+                <div key={index} className="choice-container">
                     <p className="choice-prefix">{index + 1}</p>
                     <p className="choice-text">{choice}</p>
                 </div>
