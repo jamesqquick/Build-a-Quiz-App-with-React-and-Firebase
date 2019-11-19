@@ -18,6 +18,7 @@ For this project, we are going to use Create React App to generate a starter Rea
 
 We will create the initial home page/component. It will display a title and have two buttons, one to play/take a quiz and the other to view high scores.
 
+-   create components directory
 -   create Home component
 -   add two buttons (one to play and one for High Scores)
 

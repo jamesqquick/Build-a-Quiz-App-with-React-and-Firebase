@@ -20,29 +20,42 @@ export default function Game({ history }) {
         return () => {
             mounted = false;
         };
-    }, [setQuestions,]);
+    }, [setQuestions]);
 
-    const changeQuestion = useCallback((bonus = 0) => {
-        if (bonus > 0) {
-            setScore(score + bonus);
-        }
-        if (!questions.length) {
-            return setDone(true);
-        }
-        const randomQuestionIndex = Math.floor(
-            Math.random() * questions.length
-        );
-        const currentQuestion = questions[randomQuestionIndex];
-        const nextQuestions = questions.slice();
-        nextQuestions.splice(randomQuestionIndex, 1);
-        setQuestions(nextQuestions);
-        setLoading(false);
-        setCurrentQuestion(currentQuestion);
-        setQuestionNumber(questionNumber + 1);
-    }, [score, setScore, questionNumber, setQuestionNumber, setCurrentQuestion, setQuestions, setLoading, questions, setDone]);
+    const changeQuestion = useCallback(
+        (bonus = 0) => {
+            if (bonus > 0) {
+                setScore(score + bonus);
+            }
+            if (!questions.length) {
+                return setDone(true);
+            }
+            const randomQuestionIndex = Math.floor(
+                Math.random() * questions.length
+            );
+            const currentQuestion = questions[randomQuestionIndex];
+            const nextQuestions = questions.slice();
+            nextQuestions.splice(randomQuestionIndex, 1);
+            setQuestions(nextQuestions);
+            setLoading(false);
+            setCurrentQuestion(currentQuestion);
+            setQuestionNumber(questionNumber + 1);
+        },
+        [
+            score,
+            setScore,
+            questionNumber,
+            setQuestionNumber,
+            setCurrentQuestion,
+            setQuestions,
+            setLoading,
+            questions,
+            setDone
+        ]
+    );
 
     const scoreSaved = useCallback(() => {
-        history.push("/");
+        history.push('/');
     }, [history]);
 
     // This is our initial question set, where we didn't have a question before
@@ -54,7 +67,7 @@ export default function Game({ history }) {
     }, [currentQuestion, questions, changeQuestion]);
 
     return (
-        <div className="container">
+        <>
             {loading && <div id="loader" />}
             {!done && !loading && (
                 <div id="game">
@@ -74,6 +87,6 @@ export default function Game({ history }) {
                     scoreSaved={scoreSaved}
                 />
             )}
-        </div>
+        </>
     );
 }

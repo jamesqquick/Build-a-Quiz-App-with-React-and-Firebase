@@ -16,7 +16,7 @@ const HighScores = (props) => {
     });
 
     return (
-        <div className="container">
+        <>
             <h1>HIGH SCORES</h1>
             {!!loading ? (
                 <p>Loading...</p>
@@ -29,7 +29,7 @@ const HighScores = (props) => {
                     ))}
                 </div>
             )}
-        </div>
+        </>
     );
 };
 
