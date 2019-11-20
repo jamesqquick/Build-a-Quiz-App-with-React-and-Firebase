@@ -1,8 +1,8 @@
-import React from 'react';
-import Question from './question';
+import React, { Component } from 'react';
+import Question from './Question';
 import { loadQuestions } from '../helpers/QuestionsHelper';
 
-export default class Game extends React.Component {
+export default class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -10,24 +10,22 @@ export default class Game extends React.Component {
             currentQuestion: null
         };
     }
-
     async componentDidMount() {
-        loadQuestions()
-            .then((questions) =>
-                this.setState({ questions, currentQuestion: questions[0] })
-            )
-            .catch(console.error);
+        try {
+            const questions = await loadQuestions();
+            this.setState({ questions, currentQuestion: questions[0] });
+        } catch (err) {
+            console.error(err);
+        }
     }
 
-    render = () => {
+    render() {
         return (
-            <div className="container">
-                <div id="game">
-                    {this.state.currentQuestion && (
-                        <Question question={this.state.currentQuestion} />
-                    )}
-                </div>
-            </div>
+            <>
+                {this.state.currentQuestion && (
+                    <Question question={this.state.currentQuestion} />
+                )}
+            </>
         );
-    };
+    }
 }
