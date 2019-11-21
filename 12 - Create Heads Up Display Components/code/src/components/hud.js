@@ -1,20 +1,16 @@
 import React from 'react';
-import ProgressBar from './progressBar';
+import ProgressBar from './ProgressBar';
 
-export default function hud({ score, questionNumber }) {
+export default function HUD({ score, questionNumber }) {
     return (
         <div id="hud">
-            <div id="hud-item">
-                <p id="progressText" className="hud-prefix">
-                    {`Question ${questionNumber}/10`}
-                </p>
+            <div className="hud-item">
+                <p className="hud-prefix">Question {questionNumber}/10</p>
                 <ProgressBar max={10} current={questionNumber} />
             </div>
-            <div id="hud-item">
+            <div className="hud-item">
                 <p className="hud-prefix">Score</p>
-                <h1 className="hud-main-text" id="score">
-                    {score}
-                </h1>
+                <h1 className="hud-main-text">{score}</h1>
             </div>
         </div>
     );
