@@ -1,9 +1,9 @@
-import React from 'react';
-import Question from './question';
+import React, { Component } from 'react';
+import Question from './Question';
 import { loadQuestions } from '../helpers/QuestionsHelper';
-import HUD from './hud';
+import HUD from './HUD';
 
-export default class Game extends React.Component {
+export default class Game extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,21 +15,20 @@ export default class Game extends React.Component {
             done: false
         };
     }
-
     async componentDidMount() {
-        loadQuestions()
-            .then((questions) => {
-                this.setState(
-                    {
-                        questions
-                    },
-                    () => this.changeQuestion()
-                );
-            })
-            .catch((err) => {
-                console.log(err);
-                this.setState({ loading: false });
-            });
+        try {
+            const questions = await loadQuestions();
+            this.setState(
+                {
+                    questions
+                },
+                () => {
+                    this.changeQuestion();
+                }
+            );
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     changeQuestion = (bonus = 0) => {
@@ -48,31 +47,32 @@ export default class Game extends React.Component {
             questions: remainingQuestions,
             currentQuestion,
             loading: false,
-            score: prevState.score + bonus,
+            score: (prevState.score += bonus),
             questionNumber: prevState.questionNumber + 1
         }));
-        console.log(this.state.score);
     };
 
-    render = () => {
+    render() {
         return (
-            <div className="container">
-                {this.state.loading && <div id="loader" />}
-                {!this.state.loading && (
-                    <div id="game">
-                        <HUD
-                            questionNumber={this.state.questionNumber}
-                            score={this.state.score}
-                        />
-                        {this.state.currentQuestion && (
+            <>
+                {this.state.loading && !this.state.done && <div id="loader" />}
+
+                {!this.state.loading &&
+                    !this.state.done &&
+                    this.state.currentQuestion && (
+                        <div>
+                            <HUD
+                                score={this.state.score}
+                                questionNumber={this.state.questionNumber}
+                            />
                             <Question
                                 question={this.state.currentQuestion}
                                 changeQuestion={this.changeQuestion}
                             />
-                        )}
-                    </div>
-                )}
-            </div>
+                        </div>
+                    )}
+                {this.state.done && <h1>DONE!!</h1>}
+            </>
         );
-    };
+    }
 }
