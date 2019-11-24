@@ -107,11 +107,9 @@ We will create the High Score component that the user will use to save his/her h
 -   create SaveHighScore component
 -   add form with username input and save button
 
-## Display High Score Component When Game Ends
+## Score Bug Fix and Code Cleanup
 
-We only want to display the High Score component when the user has finished the quiz, so we will add the logic to conditionally display the High Score component after the last question.
-
--   display HighScores component and hide the game when the quiz is done
+In the previous section, we created a bug in score tracking. If the user answered the question correctly, the score was not being updated. We will fix this bug and do a little bit of cleanup in the JSX of our Game component.
 
 ## Create Project in Firebase
 

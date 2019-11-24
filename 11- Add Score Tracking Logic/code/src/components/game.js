@@ -40,7 +40,7 @@ export default class Game extends Component {
             questions: remainingQuestions,
             currentQuestion,
             loading: false,
-            score: (prevState.score += bonus)
+            score: prevState.score + bonus
         }));
         console.log(this.state.score);
     };

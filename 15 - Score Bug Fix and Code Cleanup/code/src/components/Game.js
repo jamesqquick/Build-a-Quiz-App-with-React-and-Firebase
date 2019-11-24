@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Question from './Question';
 import { loadQuestions } from '../helpers/QuestionsHelper';
 import HUD from './HUD';
+import SaveScoreForm from './SaveScoreForm';
 
 export default class Game extends Component {
     constructor(props) {
@@ -11,7 +12,8 @@ export default class Game extends Component {
             currentQuestion: null,
             loading: true,
             score: 0,
-            questionNumber: 0
+            questionNumber: 0,
+            done: false
         };
     }
     async componentDidMount() {
@@ -31,6 +33,13 @@ export default class Game extends Component {
     }
 
     changeQuestion = (bonus = 0) => {
+        if (this.state.questions.length === 0) {
+            return this.setState((prevState) => ({
+                done: true,
+                score: prevState.score + bonus
+            }));
+        }
+
         const randomQuestionIndex = Math.floor(
             Math.random() * this.state.questions.length
         );
@@ -45,26 +54,31 @@ export default class Game extends Component {
             score: prevState.score + bonus,
             questionNumber: prevState.questionNumber + 1
         }));
-        console.log(this.state.score);
     };
 
     render() {
+        const {
+            loading,
+            done,
+            score,
+            currentQuestion,
+            questionNumber
+        } = this.state;
         return (
             <>
-                {this.state.loading && <div id="loader" />}
+                {loading && !done && <div id="loader" />}
 
-                {!this.state.loading && this.state.currentQuestion && (
+                {!loading && !done && currentQuestion && (
                     <div>
-                        <HUD
-                            score={this.state.score}
-                            questionNumber={this.state.questionNumber}
-                        />
+                        <HUD score={score} questionNumber={questionNumber} />
                         <Question
-                            question={this.state.currentQuestion}
+                            question={currentQuestion}
                             changeQuestion={this.changeQuestion}
                         />
                     </div>
                 )}
+
+                {done && <SaveScoreForm score={score} />}
             </>
         );
     }
