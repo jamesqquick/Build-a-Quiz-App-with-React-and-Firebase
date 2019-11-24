@@ -1,11 +1,11 @@
 {
-  "name": "quiz-app-react-firebase",
+  "name": "react-quiz-with-firebase",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "firebase": "^7.4.0",
-    "react": "^16.11.0",
-    "react-dom": "^16.11.0",
+    "firebase": "^7.5.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0"
   },

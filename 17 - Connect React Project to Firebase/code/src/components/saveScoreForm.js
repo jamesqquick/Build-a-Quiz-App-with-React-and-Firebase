@@ -1,41 +1,39 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-function SaveScoreForm({ score, scoreSaved }) {
+import { useFirebase } from './Firebase/FirebaseContext';
+export default function SaveScoreForm({ score }) {
     const [username, setUsername] = useState('');
+    const firebase = useFirebase();
+
+    console.log(firebase);
+
+    const onUsernameChange = (e) => {
+        const updatedUsername = e.target.value;
+        setUsername(updatedUsername);
+    };
 
     const saveHighScore = (e) => {
         e.preventDefault();
         const record = {
             name: username,
-            score: score
+            score
         };
         console.log(record);
     };
 
-    const onUsernameChange = (e) => {
-        const username = e.target.value;
-        setUsername(username);
-    };
-
     return (
         <div className="container">
-            <h1 id="finalScore">{score}</h1>
-            <form onSubmit={(e) => saveHighScore(e)}>
+            <h1>Score: {score}</h1>
+            <form onSubmit={saveHighScore}>
                 <input
                     type="text"
                     name="username"
                     id="username"
-                    placeholder="username"
+                    placeholder="cool kid 123"
                     value={username}
                     onChange={onUsernameChange}
                 />
-                <button
-                    type="submit"
-                    className="btn"
-                    id="saveScoreBtn"
-                    disabled={!username}
-                >
+                <button type="submit" className="btn" disabled={!username}>
                     Save
                 </button>
             </form>
@@ -45,5 +43,3 @@ function SaveScoreForm({ score, scoreSaved }) {
         </div>
     );
 }
-
-export default SaveScoreForm;

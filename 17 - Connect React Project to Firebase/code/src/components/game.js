@@ -1,12 +1,13 @@
-import React from 'react';
-import Question from './question';
+import React, { Component } from 'react';
+import Question from './Question';
 import { loadQuestions } from '../helpers/QuestionsHelper';
-import HUD from './hud';
-import SaveScoreForm from './saveScoreForm';
+import HUD from './HUD';
+import SaveScoreForm from './SaveScoreForm';
 
-export default class Game extends React.Component {
+export default class Game extends Component {
     constructor(props) {
         super(props);
+
         this.state = {
             questions: null,
             currentQuestion: null,
@@ -16,26 +17,28 @@ export default class Game extends React.Component {
             done: false
         };
     }
-
     async componentDidMount() {
-        loadQuestions()
-            .then((questions) => {
-                this.setState(
-                    {
-                        questions
-                    },
-                    () => this.changeQuestion()
-                );
-            })
-            .catch((err) => {
-                console.log(err);
-                this.setState({ loading: false });
-            });
+        try {
+            const questions = await loadQuestions();
+            this.setState(
+                {
+                    questions
+                },
+                () => {
+                    this.changeQuestion();
+                }
+            );
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     changeQuestion = (bonus = 0) => {
         if (this.state.questions.length === 0) {
-            return this.setState({ done: true });
+            return this.setState((prevState) => ({
+                done: true,
+                score: prevState.score + bonus
+            }));
         }
 
         const randomQuestionIndex = Math.floor(
@@ -52,33 +55,32 @@ export default class Game extends React.Component {
             score: prevState.score + bonus,
             questionNumber: prevState.questionNumber + 1
         }));
-        console.log(this.state.score);
     };
 
-    render = () => {
+    render() {
         const {
-            done,
             loading,
-            questionNumber,
+            done,
             score,
-            currentQuestion
+            currentQuestion,
+            questionNumber
         } = this.state;
         return (
-            <div className="container">
-                {loading && <div id="loader" />}
-                {!done && !loading && (
-                    <div id="game">
-                        <HUD questionNumber={questionNumber} score={score} />
-                        {currentQuestion && (
-                            <Question
-                                question={currentQuestion}
-                                changeQuestion={this.changeQuestion}
-                            />
-                        )}
+            <>
+                {loading && !done && <div id="loader" />}
+
+                {!loading && !done && currentQuestion && (
+                    <div>
+                        <HUD score={score} questionNumber={questionNumber} />
+                        <Question
+                            question={currentQuestion}
+                            changeQuestion={this.changeQuestion}
+                        />
                     </div>
                 )}
+
                 {done && <SaveScoreForm score={score} />}
-            </div>
+            </>
         );
-    };
+    }
 }

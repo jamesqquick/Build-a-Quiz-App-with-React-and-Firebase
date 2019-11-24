@@ -113,15 +113,18 @@ In the previous section, we created a bug in score tracking. If the user answere
 
 ## Create Project in Firebase
 
-We will create the Firebase project that we will interact with add and display high scores.
+We will create the Firebase project that we will interact with add and display high scores. We will store the necessary credentials for connecting to Firebase inside of a .env file.
 
--   create account with Firebase (if necessary)
+**Don't ever check in your .env files to source control. I've included a sample file for you to reference.**
+
 -   create new Firebase project
+-   add Firebase credentials to .env file
 
 ## Connect React Project to Firebase
 
 We will set up our React application to be able to talk to Firebase. We will use the React Context API combined with React Hooks to share the firebase instance between components.
 
+-   install firebase package from NPM
 -   create Firebase class
 -   create Firebase Context and useFirebase Hook
 -   wrap the application in Firebase Context
