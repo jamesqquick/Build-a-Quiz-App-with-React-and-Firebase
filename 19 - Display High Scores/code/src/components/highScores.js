@@ -1,49 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { useFirebase } from './Firebase/context';
+import React, { useEffect, useState } from 'react';
+import { useFirebase } from './Firebase/FirebaseContext';
 
-const HighScores = (props) => {
-    const [loading, setLoading] = useState(true);
-    const [scores, setScores] = useState([]);
+export default function HighScores() {
     const firebase = useFirebase();
+    const [scores, setScores] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        props.firebase.scores().once('value', (snapshot) => {
+        firebase.scores().once('value', (snapshot) => {
             const data = snapshot.val();
             const sortedScores = formatScoreData(data);
-            setLoading(false);
             setScores(sortedScores);
+            setLoading(false);
         });
     });
 
+    const formatScoreData = (firebaseScores) => {
+        const scores = [];
+
+        for (let key in firebaseScores) {
+            const val = firebaseScores[key];
+            val['key'] = key;
+            scores.push(val);
+        }
+
+        return scores
+            .sort((score1, score2) => score2.score - score1.score)
+            .slice(0, 10);
+    };
+
     return (
-        <div className="container">
-            <h1>HIGH SCORES</h1>
-            {!!loading ? (
-                <p>Loading...</p>
-            ) : (
-                <div id="highScoresList">
-                    {scores.map((score) => (
-                        <li key={score.key} className="high-score">
-                            {score.name} - {score.score}
-                        </li>
-                    ))}
-                </div>
+        <>
+            {loading && <div id="loader"></div>}
+            {!loading && (
+                <>
+                    <h1>High Scores</h1>
+                    <div id="highScoresList">
+                        {scores.map((record) => (
+                            <li key={record.key} className="high-score">
+                                {record.name} - {record.score}
+                            </li>
+                        ))}
+                    </div>
+                </>
             )}
-        </div>
+        </>
     );
-};
-
-const formatScoreData = (firebaseScores) => {
-    const scores = [];
-    for (let key in firebaseScores) {
-        const val = firebaseScores[key];
-        val['key'] = key;
-        scores.push(val);
-    }
-    const sortedScores = scores
-        .sort((score1, score2) => score2.score - score1.score)
-        .slice(0, 10);
-    return sortedScores;
-};
-
-export default HighScores;
+}

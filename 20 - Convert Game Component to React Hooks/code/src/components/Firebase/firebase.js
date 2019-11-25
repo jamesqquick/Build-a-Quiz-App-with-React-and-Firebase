@@ -16,7 +16,6 @@ class Firebase {
         this.db = app.database();
     }
 
-    //  ***Scores API***
     scores = () => this.db.ref('scores');
 }
 

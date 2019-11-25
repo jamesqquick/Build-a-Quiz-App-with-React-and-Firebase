@@ -4,32 +4,32 @@ export const loadQuestions = async (
     difficulty = 'easy',
     type = 'multiple'
 ) => {
+    const url = `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=${type}`;
+
     try {
-        const res = await fetch(
-            `https://opentdb.com/api.php?amount=${amount}&category=${category}&difficulty=${difficulty}&type=${type}`
-        );
+        const res = await fetch(url);
         const { results } = await res.json();
-        const questions = convertQuestionsFromAPI(results);
-        return questions;
-    } catch (ex) {
-        console.error(ex);
-        return null;
+        return convertQuestionsFromAPI(results);
+    } catch (err) {
+        console.error(err);
     }
 };
 
-export const convertQuestionsFromAPI = (rawQuestions) => {
+const convertQuestionsFromAPI = (rawQuestions) => {
     return rawQuestions.map((loadedQuestion) => {
         const formattedQuestion = {
-            question: loadedQuestion.question
+            question: loadedQuestion.question,
+            answerChoices: [...loadedQuestion.incorrect_answers]
         };
 
-        formattedQuestion.answerChoices = [...loadedQuestion.incorrect_answers];
         formattedQuestion.answer = Math.floor(Math.random() * 4);
+
         formattedQuestion.answerChoices.splice(
             formattedQuestion.answer,
             0,
             loadedQuestion.correct_answer
         );
+
         return formattedQuestion;
     });
 };
